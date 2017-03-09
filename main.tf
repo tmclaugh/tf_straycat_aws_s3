@@ -24,10 +24,10 @@ variable "versioning" {
   default = "false"
 }
 
-variable "domain" {
+variable "aws_s3_prefix" {
   type = "string"
-  description = "Environment's domain name; used to help finding remote state bucket"
-  default = "straycat.dhs.org"
+  description = "Used to help finding remote state bucket"
+  default = "straycat-dhs-org"
 }
 
 variable "aws_account" {
@@ -45,7 +45,7 @@ variable "aws_region" {
 data "terraform_remote_state" "root" {
   backend = "s3"
   config = {
-    bucket  = "${var.domain}-${var.aws_account}-terraform"
+    bucket  = "${var.aws_s3_prefix}-${var.aws_account}-terraform"
     key     = "root.tfstate"
     region  = "${var.aws_region}"
   }
@@ -56,7 +56,7 @@ data "terraform_remote_state" "root" {
 resource "aws_s3_bucket" "bucket" {
   # This is to keep things consistrent and prevent conflicts across
   # environments.
-  bucket = "${var.domain}-${var.aws_account}-${var.s3_bucket_name}"
+  bucket = "${var.aws_s3_prefix}-${var.aws_account}-${var.s3_bucket_name}"
   acl    = "${var.s3_bucket_acl}"
 
   versioning = {
@@ -65,7 +65,7 @@ resource "aws_s3_bucket" "bucket" {
 
   logging = {
     target_bucket = "${var.s3_logs_bucket == "default" ? data.terraform_remote_state.root.aws_s3_bucket_infra_logs_bucket_id : var.s3_logs_bucket}"
-    target_prefix = "s3/${var.domain}-${var.aws_account}-${var.s3_bucket_name}/"
+    target_prefix = "s3/${var.aws_s3_prefix}-${var.aws_account}-${var.s3_bucket_name}/"
   }
 
   tags = {

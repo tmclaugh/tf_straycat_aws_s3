@@ -20,6 +20,13 @@ variable "s3_bucket_acl" {
   default = "private"
 }
 
+# FIXME: Need to figure out how to pass in the name of the S3 bucket that has
+# yet to be resolved due to our name mangling.
+#variable "s3_buckety_policy" {
+#  description = "Optional bucket policy"
+#  default = ""
+#}
+
 variable "versioning" {
   default = "false"
 }
@@ -73,6 +80,13 @@ resource "aws_s3_bucket" "bucket" {
   }
 }
 
+# FIXME: Need to figure out how to pass in the name of the S3 bucket that has
+# yet to be resolved due to our name mangling.
+#resource "aws_s3_buckey_policy" "bucket" {
+#  count  = "${length(var.s3_bucket_policy) > 1 ? 1 : 0 }"
+#  bucket = "${aws_s3_bucket.bucket.id}"
+#  policy = "${var.s3_bucket_policy}"
+#}
 
 # Outputs
 output "bucket_id" {

@@ -75,6 +75,8 @@ resource "aws_s3_bucket" "bucket" {
     target_prefix = "s3/${var.aws_s3_prefix}-${var.aws_account}-${var.s3_bucket_name}/"
   }
 
+  force_destroy = true
+
   tags = {
     terraform = "true"
   }
